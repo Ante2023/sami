@@ -9,7 +9,9 @@ sudo docker volume create traefik_data
 ```
 - 3º Crear y ejecutar contenedor
 ```bash
-sudo docker compose up -d
+# sudo docker compose up -d
+docker-compose -f docker-compose-n8n.yml up -d
+
 ```
 - 4º Accediendo al servicio n8n
 ```bash

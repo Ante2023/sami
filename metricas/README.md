@@ -11,6 +11,14 @@ Las **métricas de rendimento** de un contenedor Docker pueden ser monitoreadas 
 Docker tomará esta configuración y expondrá métrias en **formato compatible con Prometheus** en el puerto 9323 e interface del host-anfitrión del host-anfitrión.  
 
 **Prometheus**: Software con un set de herramientas de alertas y monitero de objetivos.    
+
+## Creando el contenedor de prometheus
+```bash
+# docker compose pu -s
+  docker-compose -f docker-compose-prometheus.yml up -d
+
+```
+
 ## Archivo de configuración para daemon docker
 
 ## Accediendo al servicio web de prometheus
