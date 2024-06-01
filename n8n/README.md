@@ -16,10 +16,10 @@ docker-compose -f docker-compose-n8n.yml up -d
 - 4º Accediendo al servicio n8n
 ```bash
 http://localhost:5678/setup
-user: dent007@gmail.com
+user: test@test.com
 First Name: Test
 Last Name: Test
-pass: M1w1k1.2024
+pass: test.test
 ```
 ## Observación:
 - Se podría ejecutar el contenedor sin sudo. existe el 
