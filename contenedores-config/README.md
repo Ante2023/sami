@@ -4,12 +4,15 @@ docker network create monitoringç
 ```
 
 RESUMEN:
-1º levantar contenedores-config/docker-compose-net.yml
- docker-compose -f docker-compose-net.yml up -d
+- 1º levantar: contenedores-config/docker-compose-net.yml
+      
+      docker-compose -f docker-compose-net.yml up -d      
 
-2º crear volumenes y levantar  n8n/docker-compose-n8n.yml
-    crear volumenes
-   docker-compose -f docker-compose-n8n.yml up -d
+- 2º crear volumenes y levantar:  n8n/docker-compose-n8n.yml
+      
+      1º  crear volumenes (instrucciones en README.md)
+      2º  docker-compose -f docker-compose-n8n.yml up -d
 
-3º levantar /metricas/docker-compose-metricas.yml
-   docker-compose -f docker-compose-prometheus.yml up -d
+- 3º levantar /metricas/docker-compose-metricas.yml
+      
+      docker-compose -f docker-compose-prometheus.yml up -d
