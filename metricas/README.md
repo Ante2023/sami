@@ -18,9 +18,6 @@ Docker tomará esta configuración y expondrá métrias en **formato compatible 
   docker-compose -f docker-compose-prometheus.yml up -d
 
 ```
-
-## Archivo de configuración para daemon docker
-
 ## Accediendo al servicio web de prometheus
 ```bash
 http://localhost:9090/

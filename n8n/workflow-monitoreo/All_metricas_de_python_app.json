@@ -1,0 +1,62 @@
+{
+  "name": "All metricas de python app",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "d4804810-1877-4278-858b-2b3d7a9b645c",
+      "name": "When clicking \"Test workflow\"",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        700,
+        280
+      ]
+    },
+    {
+      "parameters": {
+        "url": "http://prometheus:9090/api/v1/query?query={instance=\"app:5000\"}",
+        "options": {}
+      },
+      "id": "d8a8d5cb-6f4a-47ea-bde1-d0ca0d40bca0",
+      "name": "Get instance=\"app:5000\"",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        920,
+        280
+      ]
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking \"Test workflow\"": {
+      "main": [
+        [
+          {
+            "node": "Get instance=\"app:5000\"",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "6c8f6ec9-01d9-4d2d-a925-a009dd828bcd",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "5979029b2983281954b6007b0e462b5852447110fac329c698fdcddcdbdb1fe9"
+  },
+  "id": "V7Bz7wYRA8w9IIWg",
+  "tags": [
+    {
+      "name": "app:5000",
+      "id": "6uupkDOW4cHu7bpS",
+      "createdAt": "2024-06-04T16:50:42.430Z",
+      "updatedAt": "2024-06-04T16:50:42.430Z"
+    }
+  ]
+}

@@ -1,0 +1,62 @@
+{
+  "name": "All metricas de contenedor",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "61e78235-a1c6-47d7-b850-71a651a74b2e",
+      "name": "When clicking \"Test workflow\"",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        700,
+        280
+      ]
+    },
+    {
+      "parameters": {
+        "url": "http://prometheus:9090/api/v1/query?query={instance=\"host.docker.internal:9323\"}&time=1717516416.045",
+        "options": {}
+      },
+      "id": "c4597c1b-db06-4785-80bd-e47d359a68c4",
+      "name": "Get_host.docker.internal:9323",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        920,
+        280
+      ]
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking \"Test workflow\"": {
+      "main": [
+        [
+          {
+            "node": "Get_host.docker.internal:9323",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "5cf8f049-5bef-48b1-84a9-c0078b5b02e1",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "5979029b2983281954b6007b0e462b5852447110fac329c698fdcddcdbdb1fe9"
+  },
+  "id": "bll7LQSx6We8UxDa",
+  "tags": [
+    {
+      "createdAt": "2024-06-04T16:01:59.992Z",
+      "updatedAt": "2024-06-04T16:03:12.284Z",
+      "id": "Kgcy9yS5rVNaPwsl",
+      "name": "hostDockerInternal:9323"
+    }
+  ]
+}

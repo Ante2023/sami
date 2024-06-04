@@ -11,18 +11,19 @@ sudo docker volume create traefik_data
 ```bash
 # sudo docker compose up -d
 docker-compose -f docker-compose-n8n.yml up -d
-
 ```
 - 4º Accediendo al servicio n8n
 ```bash
 http://localhost:5678/setup
+
+# Opcional por si no has creado cuenta aún. Cambiar informacíón  
 user: test@test.com
 First Name: Test
 Last Name: Test
 pass: test.test
 ```
 ## Observación:
-- Se podría ejecutar el contenedor sin sudo. existe el 
+- Se podría ejecutar el contenedor sin sudo. Ya existe 
 ```bash
  cat /etc/group
  #output
@@ -30,3 +31,5 @@ pass: test.test
 ```
 ## Documentacion
 [n8n Docs | docker-compose](https://docs.n8n.io/hosting/installation/server-setups/docker-compose/#3-install-docker-compose 'n8n Docs')
+
+**Sigueiente** -> Leer READEM en "metricas/READEM.md"
