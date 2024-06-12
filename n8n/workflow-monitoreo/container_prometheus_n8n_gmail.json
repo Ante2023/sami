@@ -1,0 +1,197 @@
+{
+  "name": "container-prometheus-n8n-gmail",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "seconds",
+              "secondsInterval": 29
+            }
+          ]
+        }
+      },
+      "id": "9b4df4d0-b4e6-4f49-b50b-fe3105da9260",
+      "name": "Init-workflow-Trigger",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        200,
+        620
+      ]
+    },
+    {
+      "parameters": {
+        "url": "http://localhost:9090/api/v1/query?query={instance=\"host.docker.internal:9323\"} ",
+        "options": {}
+      },
+      "id": "ec56ffe9-fa69-482d-a6f4-3c3ccfab94f0",
+      "name": "GET_promQL_Contenedor",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        540,
+        700
+      ]
+    },
+    {
+      "parameters": {
+        "url": "http://localhost:9090/api/v1/query?query={instance=\"app:5000\"}",
+        "options": {}
+      },
+      "id": "ce57e0ca-c8a6-468a-bea6-967194b30bd8",
+      "name": "GET_promQL_app",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        460,
+        460
+      ]
+    },
+    {
+      "parameters": {
+        "sendTo": "appsoftest@gmail.com",
+        "subject": "=Objetivo:  \"{{ $json.up.metric.job }}\" | Métrica: \"{{ $json.up.metric.__name__ }}\"",
+        "message": "=<h3>Informe de Métrica: {{$json.up.metric.__name__}} </h3>\n<ol>\n  <li>Nombre de Instancia: {{$json.up.metric.instance}}</li>\n  <li>Nombre de Objetivo Prometheus: {{$json.up.metric.job}} </li>\n  <li>Valor: {{$json.up.metric.values()[0]}}</li>\n<li>Cantidad: {{$json.up.metric.values()[1]}}</li>\n</ol>\n\n",
+        "options": {}
+      },
+      "id": "27b98bd2-e908-4a16-9403-4d63a497b305",
+      "name": "email-app",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        1040,
+        340
+      ],
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "pHi8Z0vWcRxBBqK3",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "appsoftest@gmail.com",
+        "subject": "=Objetivo:  {{ $json.metric.job }}  | Métrica:  {{ $json.metric.__name__ }}",
+        "message": "=<h3>Informe de Métrica: {{$json.metric.__name__}} </h3>\n<ol>\n  <li>Action: {{$json.metric.action}}</li>\n  <li>Instance: {{$json.metric.instance}}</li>\n  <li>Nombre de Objetivo Prometheus: {{$json.metric.job}} </li>\n  <li>le: {{$json.metric.le}} </li>\n  <li>Valor: {{$json.metric.values()[0]}}</li>\n<li>Cantidad: {{$json.metric.values()[1]}}</li>\n</ol>\n\n",
+        "options": {}
+      },
+      "id": "e5c0b794-1d43-4ca1-a7e3-d437f60520ab",
+      "name": "email-contenedor",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        1040,
+        660
+      ],
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "pHi8Z0vWcRxBBqK3",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Loop over input items and add a new field called 'myNewField' to the JSON of each one\n// for (const item of $input.all()) {\n//   item.json.myNewField = 1; \n// }\n// console.log($input.all()) // ver todo el objeto\n// console.log($input.all()[0].json.data.result[0])\n// return [{result: $input.all()[0].json.data.result}]; // all array\nreturn [{up: $input.all()[0].json.data.result[0]}]; // onli item 0"
+      },
+      "id": "74032af4-1c6c-41fc-a428-1a45da8e7f6f",
+      "name": "Code",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        680,
+        460
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Loop over input items and add a new field called 'myNewField' to the JSON of each one\nfor (const item of $input.all()) {\n  item.json.myNewField = 1;\n}\nconsole.log($input.all()[0].json.data.result[0])\nreturn $input.all()[0].json.data.result[0];"
+      },
+      "id": "acc60120-863c-4c11-a349-46e41b64618d",
+      "name": "Code1",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        760,
+        700
+      ]
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Init-workflow-Trigger": {
+      "main": [
+        [
+          {
+            "node": "GET_promQL_Contenedor",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "GET_promQL_app",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GET_promQL_Contenedor": {
+      "main": [
+        [
+          {
+            "node": "Code1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GET_promQL_app": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "email-app",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code1": {
+      "main": [
+        [
+          {
+            "node": "email-contenedor",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "d0c98127-6572-4b10-a0f2-d5c77def0794",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "55fe235c2aa16d2a5a4ea96cce6d79e869ef2100ffa14770bd437d47005959d3"
+  },
+  "id": "6nxudV6kFyirUbSU",
+  "tags": []
+}

@@ -46,12 +46,19 @@ services:
       - traefik.http.middlewares.n8n.headers.STSPreload=true
       - traefik.http.routers.n8n.middlewares=n8n@docker
     environment:
-      - N8N_HOST=${SUBDOMAIN}.${DOMAIN_NAME}
+      # - N8N_HOST=${SUBDOMAIN}.${DOMAIN_NAME}
+      - N8N_HOST=n8n.tesis.com
+
       - N8N_PORT=5678
       - N8N_PROTOCOL=https
       - NODE_ENV=production
-      - WEBHOOK_URL=https://${SUBDOMAIN}.${DOMAIN_NAME}/
+      
+      # - WEBHOOK_URL=https://${SUBDOMAIN}.${DOMAIN_NAME}/
+      - WEBHOOK_URL=https://n8n.tesis.com/workflow/
+
       - GENERIC_TIMEZONE=${GENERIC_TIMEZONE}
+      # 
+      - N8N_ENDPOINT_REST=workflow/rest
     volumes:
       - n8n_data:/home/node/.n8n
       - /home/dent/n8n-local-files:/files

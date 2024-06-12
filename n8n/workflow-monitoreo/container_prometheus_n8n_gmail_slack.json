@@ -1,0 +1,263 @@
+{
+  "name": "container-prometheus-n8n-gmail-slack",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "seconds",
+              "secondsInterval": 29
+            }
+          ]
+        }
+      },
+      "id": "1e1acb92-7164-4081-9546-f84e4f4fb9a6",
+      "name": "Init-workflow-Trigger",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -40,
+        620
+      ]
+    },
+    {
+      "parameters": {
+        "url": "http://localhost:9090/api/v1/query?query={instance=\"host.docker.internal:9323\"} ",
+        "options": {}
+      },
+      "id": "84d3a0a5-0121-437f-bc5c-77b108d04726",
+      "name": "GET_promQL_Contenedor",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        260,
+        720
+      ]
+    },
+    {
+      "parameters": {
+        "url": "http://localhost:9090/api/v1/query?query={instance=\"app:5000\"}",
+        "options": {}
+      },
+      "id": "efc943ab-cce0-4f45-8c7c-082beef576f7",
+      "name": "GET_promQL_app",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        260,
+        500
+      ]
+    },
+    {
+      "parameters": {
+        "sendTo": "appsoftest@gmail.com",
+        "subject": "=Objetivo:  \"{{ $json.up.metric.job }}\" | Métrica: \"{{ $json.up.metric.__name__ }}\"",
+        "message": "=<h3>Informe de Métrica: {{$json.up.metric.__name__}} </h3>\n<ol>\n  <li>Nombre de Instancia: {{$json.up.metric.instance}}</li>\n  <li>Nombre de Objetivo Prometheus: {{$json.up.metric.job}} </li>\n  <li>Valor: {{$json.up.metric.values()[0]}}</li>\n<li>Cantidad: {{$json.up.metric.values()[1]}}</li>\n</ol>\n\n",
+        "options": {}
+      },
+      "id": "686c5df7-9a1d-424c-a733-96ddbb883e4a",
+      "name": "email-app",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        1060,
+        500
+      ],
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "pHi8Z0vWcRxBBqK3",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "appsoftest@gmail.com",
+        "subject": "=Objetivo:  {{ $json.metric.job }}  | Métrica:  {{ $json.metric.__name__ }}",
+        "message": "=<h3>Informe de Métrica: {{$json.metric.__name__}} </h3>\n<ol>\n  <li>Action: {{$json.metric.action}}</li>\n  <li>Instance: {{$json.metric.instance}}</li>\n  <li>Nombre de Objetivo Prometheus: {{$json.metric.job}} </li>\n  <li>le: {{$json.metric.le}} </li>\n  <li>Valor: {{$json.metric.values()[0]}}</li>\n<li>Cantidad: {{$json.metric.values()[1]}}</li>\n</ol>\n\n",
+        "options": {}
+      },
+      "id": "8843a2c6-cd2b-48d7-878d-c598bae615b6",
+      "name": "email-contenedor",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        1060,
+        920
+      ],
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "pHi8Z0vWcRxBBqK3",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Loop over input items and add a new field called 'myNewField' to the JSON of each one\n// for (const item of $input.all()) {\n//   item.json.myNewField = 1; \n// }\n// console.log($input.all()) // ver todo el objeto\n// console.log($input.all()[0].json.data.result[0])\n// return [{result: $input.all()[0].json.data.result}]; // all array\nreturn [{up: $input.all()[0].json.data.result[0]}]; // onli item 0"
+      },
+      "id": "c5ac7f1e-4769-4945-a2fb-25867c0e481a",
+      "name": "app_js",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        640,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Loop over input items and add a new field called 'myNewField' to the JSON of each one\nfor (const item of $input.all()) {\n  item.json.myNewField = 1;\n}\nconsole.log($input.all()[0].json.data.result[0])\nreturn $input.all()[0].json.data.result[0];"
+      },
+      "id": "b87cf341-ce71-4fd9-92ed-5b7a284cf760",
+      "name": "contenedor_js",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        640,
+        780
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "select": "user",
+        "user": {
+          "__rl": true,
+          "value": "U06G806F8BT",
+          "mode": "list",
+          "cachedResultName": "dent007"
+        },
+        "text": "=Esta métrica \"{{ $json.up.metric.__name__ }}\", tiene este valor  {{ $json.up.value[1] }}",
+        "otherOptions": {}
+      },
+      "id": "21b9ee3f-1b8b-44d1-a121-99b6851dac53",
+      "name": "alerta-app",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.1,
+      "position": [
+        1060,
+        260
+      ],
+      "credentials": {
+        "slackOAuth2Api": {
+          "id": "GTXmaWPsPk2SI246",
+          "name": "Slack account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "value": "C0778KPKGCF",
+          "mode": "list",
+          "cachedResultName": "docker"
+        },
+        "text": "=Esta métrica \"{{ $json.metric.__name__ }}\", tiene este valor  {{ $json.value[1] }}",
+        "otherOptions": {}
+      },
+      "id": "d07b84f7-d4a1-4f39-b987-f7d22c0c8b62",
+      "name": "alerta-contenedor",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.1,
+      "position": [
+        1060,
+        680
+      ],
+      "credentials": {
+        "slackOAuth2Api": {
+          "id": "GTXmaWPsPk2SI246",
+          "name": "Slack account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Init-workflow-Trigger": {
+      "main": [
+        [
+          {
+            "node": "GET_promQL_Contenedor",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "GET_promQL_app",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GET_promQL_Contenedor": {
+      "main": [
+        [
+          {
+            "node": "contenedor_js",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GET_promQL_app": {
+      "main": [
+        [
+          {
+            "node": "app_js",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "app_js": {
+      "main": [
+        [
+          {
+            "node": "email-app",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "alerta-app",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "contenedor_js": {
+      "main": [
+        [
+          {
+            "node": "email-contenedor",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "alerta-contenedor",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "4eea2406-f88b-4d5f-8a04-490dc89cc6df",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "55fe235c2aa16d2a5a4ea96cce6d79e869ef2100ffa14770bd437d47005959d3"
+  },
+  "id": "gUVTe43jgnrzR2It",
+  "tags": []
+}

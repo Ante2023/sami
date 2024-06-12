@@ -1,0 +1,83 @@
+{
+  "name": "trigger-WF-contenedor-metricas",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "seconds",
+              "secondsInterval": 29
+            }
+          ]
+        }
+      },
+      "id": "4ac28777-d600-4cc4-a96b-4825f1aa5a9e",
+      "name": "Init-workflow-Trigger",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        640,
+        280
+      ]
+    },
+    {
+      "parameters": {
+        "url": "http://prometheus:9090/api/v1/query?query={instance=\"host.docker.internal:9323\"} ",
+        "options": {}
+      },
+      "id": "6840f21f-326c-4203-95e4-0e58218cceb6",
+      "name": "GET_promQL_Contenedor",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        900,
+        380
+      ]
+    },
+    {
+      "parameters": {
+        "url": "http://prometheus:9090/api/v1/query?query={instance=\"app:5000\"}",
+        "options": {}
+      },
+      "id": "423ec6c7-384d-4f19-a4fc-42fcc4854697",
+      "name": "GET_promQL_app",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        900,
+        120
+      ]
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Init-workflow-Trigger": {
+      "main": [
+        [
+          {
+            "node": "GET_promQL_Contenedor",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "GET_promQL_app",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "dbe99579-2309-4d3e-aa5b-adbdf47ef0db",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "5979029b2983281954b6007b0e462b5852447110fac329c698fdcddcdbdb1fe9"
+  },
+  "id": "XGXW1sdB5QflsVwu",
+  "tags": []
+}

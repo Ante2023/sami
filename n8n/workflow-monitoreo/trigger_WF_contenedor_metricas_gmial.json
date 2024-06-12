@@ -1,0 +1,116 @@
+{
+  "name": "trigger-WF-contenedor-metricas-gmial",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "seconds",
+              "secondsInterval": 29
+            }
+          ]
+        }
+      },
+      "id": "cc578c8e-5dc3-4e2c-84c1-2112b2db1f08",
+      "name": "Init-workflow-Trigger",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        640,
+        280
+      ]
+    },
+    {
+      "parameters": {
+        "url": "http://prometheus:9090/api/v1/query?query={instance=\"host.docker.internal:9323\"} ",
+        "options": {}
+      },
+      "id": "12722217-2cef-4b93-a982-7e5de4b1b124",
+      "name": "GET_promQL_Contenedor",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        900,
+        380
+      ]
+    },
+    {
+      "parameters": {
+        "url": "http://prometheus:9090/api/v1/query?query={instance=\"app:5000\"}",
+        "options": {}
+      },
+      "id": "f89d112e-6786-4e23-9c6d-2987a2815dfe",
+      "name": "GET_promQL_app",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        900,
+        120
+      ]
+    },
+    {
+      "parameters": {
+        "sendTo": "appsoftest@gmail.com",
+        "subject": "metric container",
+        "message": "=\"HOLA\"",
+        "options": {}
+      },
+      "id": "71022dc2-0730-4e24-9dd9-860e5bcbec05",
+      "name": "Gmail",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        1340,
+        180
+      ],
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "W0u6v2rS7ANOOl1t",
+          "name": "Gmail account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Init-workflow-Trigger": {
+      "main": [
+        [
+          {
+            "node": "GET_promQL_Contenedor",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "GET_promQL_app",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GET_promQL_Contenedor": {
+      "main": [
+        [
+          {
+            "node": "Gmail",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "59f9cb70-7f39-46c8-a612-532b3b470d29",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "5979029b2983281954b6007b0e462b5852447110fac329c698fdcddcdbdb1fe9"
+  },
+  "id": "5pS6poAWYCUetYCd",
+  "tags": []
+}
